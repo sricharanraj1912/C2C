@@ -1,0 +1,54 @@
+import { Component } from '@angular/core';
+import{FormBuilder,FormGroup, Validators} from '@angular/forms'
+
+@Component({
+  selector: 'app-r-form',
+  templateUrl: './r-form.component.html',
+  styleUrls: ['./r-form.component.css']
+})
+export class RFormComponent {
+  constructor(private fb:FormBuilder){} // dependencyvinjection of other class to this class
+  // uaing private is to create a property internally
+  rForm: FormGroup = this.fb.group({
+    'name' : [null, Validators.required],
+    'description' : [null, [Validators.required,
+    Validators.minLength(30),
+    Validators.maxLength(500)]],
+    'validate' : ''
+    });
+    post:any; // A property for our submitted form
+    description:string = '';
+    name:string = '';
+    titleAlert:string = 'This field is required';
+    addPost(post:any) {
+    this.description = post.description;
+    this.name = post.name;
+    }
+        
+
+}
+
+
+
+
+
+
+
+    <!-- ng submit round bracket since its an event -->
+
+<!-- mapped input box to validator in .ts and text area is mapped to description -->
+
+<!-- form grp , form builder and validators -->
+
+<form [formGroup]="rForm" (ngSubmit)="addPost(rForm.value)">
+    <input type="text" formControlName="name" />
+    <div style="color:red" *ngIf="!rForm.controls['name'].valid
+    && rForm.controls['name'].touched">{{ titleAlert }}</div>
+    <textarea formControlName="description"></textarea>
+
+    <div style="color:red" *ngIf="!rForm.controls['description'].valid &&
+rForm.controls['description'].touched">You must specify a description that's
+between 30 and 500 characters.</div>
+<input type="submit" class="button expanded" value="Submit Form"
+[disabled]="!rForm.valid">
+</form>
